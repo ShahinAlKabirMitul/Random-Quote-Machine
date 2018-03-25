@@ -5,16 +5,66 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
   <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ"
     crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var theQuote = '';
+      var theAuthor = '';
+      createQuote();
 
+      $('.btnQuote').on("click", function () {
+        createQuote();
+      });
+
+      $('.btn2').on("click", function () {
+        var myUrl = 'https://twitter.com/intent/tweet?text=' + theQuote + ' ' + theAuthor;
+        window.open(myUrl, 'twitter');
+        return false;
+      });
+
+
+      function createQuote() {
+        // The following is the API call to the MashApe random quotes API server
+        var output = $.ajax({
+          url: 'https://andruxnet-random-famous-quotes.p.mashape.com/cat=famous',
+          type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
+          data: {}, // Additional parameters here
+          dataType: 'json',
+          success: function (data) {
+            theQuote = data.quote;
+            theAuthor = data.author;
+            document.getElementById('quote').innerHTML = theQuote;
+            document.getElementById('author').innerHTML = theAuthor;
+          },
+          error: function (err) {
+            // If, for some reason, the API becomes unavailable, the Quote Machine will still work, though in a limited manner.
+            var quotes = {
+              1: ['If a man does his best, what else is there?', 'Gen. George S. Patton'],
+              2: ['Give me chastity and continence, but not yet.', 'Saint Augustine'],
+              3: ['You can avoid reality, but you cannot avoid the consequences of avoiding reality.', 'Ayn Rand'],
+              4: ['I have always depended on the kindness of strangers.', 'A Streetcar Named Desire']
+            };
+            var randomQuoteNumber = Math.ceil(Math.random() * Object.keys(quotes).length);
+
+            $('#quote').text(quotes[randomQuoteNumber][0]);
+            $('#author').text(quotes[randomQuoteNumber][1]);
+
+          },
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-Mashape-Authorization", "Sr4ugfUfUHmshOQ2IbeGXw8i1Gujp15JgPZjsnIcl0TaxHmdX3"); // Enter here your Mashape key
+          }
+        });
+      }
+    });
+  </script>
   <style>
     .container {
-      margin-top: 75px;
+      margin-top: 5%;
     }
   </style>
 
@@ -22,35 +72,42 @@
 </head>
 
 <body>
+ 
   <div class="container">
     <div class="card text-center">
       <div class="card-header">
-        Quotes
+        Random Quotes
       </div>
       <div class="card-body">
+        <blockquote class="blockquote">
+          <p id='quote' class="mb-0"></p>
+          <footer class="blockquote-footer">
+            <cite id='author'></cite>
+          </footer>
+        </blockquote>
+        <div class='theWholeEnchilada'>
+          <blockquote class="blockquote">
 
-        <h3 class="card-text">With supporting text below as a natural lead-in to additional content.</h3>
-        <br>
-        <br>
-        <a href="#" class="btn btn-primary btn-lg">Next quotes</a>
-      </div>
-      <div class="card-footer text-muted">
-        <a href="#">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" class="btn btn-primary">twiter</a>
+          </blockquote>
+          <footer>
+            <cite>
+              <div id='author'></div>
+            </cite>
+          </footer>
+
+
+        </div>
+        <a href="#" class="btnQuote btn btn-primary">Next quotes >></a>
+        <a href="#" class="btn2 btn btn-info">Tweet Quote</a>
+
       </div>
     </div>
+
+
   </div>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+
+
 </body>
 
 </html>
